@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
@@ -12,13 +14,14 @@ import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btreset;
     private class Cell {
         Button bt;
         String value;
         public Cell(Context THIS){
             bt = new Button(THIS);
             value="";
+            bt.setLayoutParams(new LinearLayout.LayoutParams(buttonsize, buttonsize));
+            bt.setTextSize(buttonsize/10);
             bt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
                         turn = turn == "X" ? "O" : "X";
                         bt.setText(value);
                         finished();
+
                     }
                 }
             });
@@ -64,18 +68,26 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    Button btreset;
     Cell[][] table;
     LinearLayout linlay;
+    LinearLayout linlay2;
     GridLayout gr;
     String turn;
+    int buttonsize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
+        Point point = new Point();
+        getWindowManager().getDefaultDisplay().getSize(point);
+        buttonsize = point.x/3;
         linlay = new LinearLayout(this);
+        linlay.setGravity(Gravity.CENTER_HORIZONTAL);
+        linlay.setOrientation(LinearLayout.VERTICAL);
+        linlay2 = new LinearLayout(this);
         gr = new GridLayout(this);
         gr.setColumnCount(3);
-        //gr.setRowCount(3);
         table= new Cell[3][3];
         for (int i=0; i<3; i++){
             //table[i] = new Cell[3];
@@ -89,7 +101,8 @@ public class MainActivity extends AppCompatActivity {
         btreset.setText("Restart");
         restart(btreset);
         linlay.addView(gr);
-        linlay.addView(btreset);
+        linlay2.addView(btreset);
+        linlay.addView(linlay2);
         setContentView(linlay);
     }
 
